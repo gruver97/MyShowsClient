@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
@@ -12,16 +11,14 @@ using MysShowsClient.Services.MyShow;
 
 namespace MysShowsClient.ViewModel
 {
-    public class SearchViewModel : ViewModelBase, ISearchViewModel
+    public class SearchViewModel : ShowViewModelBase, ISearchViewModel
     {
-        private const string NotFoundMessage = "Мы не смогли найти по запросу \"{0}\"";
-        private const string ErrorMessage = "Упс, проблемка :-( ";
         private readonly IMyShowService _myShowService;
         private readonly NavigationService _navigationService;
-        private string _infoMessage;
         private string _searchQuery;
 
-        public SearchViewModel([Dependency] IMyShowService myShowService, [Dependency] NavigationService navigationService)
+        public SearchViewModel([Dependency] IMyShowService myShowService,
+            [Dependency] NavigationService navigationService)
         {
             _myShowService = myShowService;
             _navigationService = navigationService;
@@ -32,7 +29,8 @@ namespace MysShowsClient.ViewModel
                 new DelegateCommand<ItemClickEventArgs>(
                     eventArgs =>
                     {
-                        _navigationService.NavigateTo("FullDescriptionPage", eventArgs.ClickedItem as ShortDescription);
+                        _navigationService.NavigateTo("FullDescriptionPage",
+                            (eventArgs.ClickedItem as ShortDescription)?.Id);
                     });
         }
 
@@ -50,18 +48,6 @@ namespace MysShowsClient.ViewModel
 
         public ObservableCollection<ShortDescription> ShortDescriptions { get; }
         public DelegateCommand SearchCommand { get; }
-        public event EventHandler<ChangeVisualStateEventArgs> VisualStateChanged;
-
-        public string InfoMessage
-        {
-            get { return _infoMessage; }
-            private set
-            {
-                if (_infoMessage == value) return;
-                _infoMessage = value;
-                RaisePropertyChanged();
-            }
-        }
 
         public DelegateCommand<ItemClickEventArgs> NavigateToDetailsPageCommand { get; }
 
@@ -101,11 +87,6 @@ namespace MysShowsClient.ViewModel
                 InfoMessage = ErrorMessage;
                 OnVisualStateChanged(new ChangeVisualStateEventArgs(LoadingStatesEnum.ErrorState));
             }
-        }
-
-        protected virtual void OnVisualStateChanged(ChangeVisualStateEventArgs e)
-        {
-            VisualStateChanged?.Invoke(this, e);
         }
     }
 }

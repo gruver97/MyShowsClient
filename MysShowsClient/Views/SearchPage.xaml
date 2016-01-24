@@ -9,7 +9,8 @@
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource Locator}, Path=SearchViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    Loaded="SearchPage_OnLoaded">
+    Loaded="SearchPage_OnLoaded"
+    NavigationCacheMode="Enabled">
 
     <Grid x:Name="LayoutRoot">
 

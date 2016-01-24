@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Controls;
-using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.Prism.Commands;
 using MysShowsClient.EventArguments;
 using MysShowsClient.Model;

@@ -102,6 +102,7 @@
     <Compile Include="ViewModel\ISearchViewModel.cs" />
     <Compile Include="ViewModel\LoadingStatesEnum.cs" />
     <Compile Include="ViewModel\SearchViewModel.cs" />
+    <Compile Include="ViewModel\ShowViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\FullDescriptionPage.xaml.cs">
       <DependentUpon>FullDescriptionPage.xaml</DependentUpon>

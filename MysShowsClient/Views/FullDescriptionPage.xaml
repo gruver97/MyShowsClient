@@ -5,20 +5,55 @@
     xmlns:local="using:MysShowsClient.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
+    Loaded="FullDescriptionPage_OnLoaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding Source={StaticResource Locator}, Path=FullDescriptionViewModel}">
-
+    DataContext="{Binding Source={StaticResource Locator}, Path=FullDescriptionViewModel}"
+    >
+    <Page.Resources>
+        <DataTemplate x:Key="DescriptionTemplate">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{Binding Path=Description.Title}" />
+                <ProgressRing HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="ProgressRing"
+                              IsActive="True" Visibility="Collapsed" />
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
+                           x:Name="InfoTextBlock" Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Center"
+                           TextWrapping="WrapWholeWords" Text="{Binding Path=InfoMessage}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="EpisodesTempate">
+            <ListView x:Name="EpisodesListView" ItemsSource="{Binding Path=Description.Episodes}"
+                      IsItemClickEnabled="False"
+                      IsSwipeEnabled="False" SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,0,0,20" Background="#AA000000">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Width="100" Height="100" Source="{Binding Path=Image}"
+                                   Stretch="Uniform" />
+                            <TextBlock Style="{StaticResource ListViewItemTextBlockStyle}" Grid.Column="1"
+                                       Text="{Binding Path=Title}" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWholeWords" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </DataTemplate>
+    </Page.Resources>
     <Hub Header="Описание">
         <Hub.Sections>
-            <HubSection Header="Описание">
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Path=Description.Title}" />
-                    </StackPanel>
-                </DataTemplate>
-            </HubSection>
-            <HubSection Header="Эпизоды" />
+            <HubSection Header="Описание" ContentTemplate="{StaticResource DescriptionTemplate}" />
+            <HubSection Header="Эпизоды" ContentTemplate="{StaticResource EpisodesTempate}" />
         </Hub.Sections>
     </Hub>
 </Page>

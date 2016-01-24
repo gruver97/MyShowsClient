@@ -1,7 +1,11 @@
 ﻿using System;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using MysShowsClient.Common;
+using MysShowsClient.EventArguments;
+using MysShowsClient.ViewModel;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -12,6 +16,9 @@ namespace MysShowsClient.Views
     /// </summary>
     public sealed partial class FullDescriptionPage : Page
     {
+        private int _requestedShowId;
+        private StatusBar _statusBar;
+
         public FullDescriptionPage()
         {
             InitializeComponent();
@@ -31,6 +38,8 @@ namespace MysShowsClient.Views
         ///     This can be changed to a strongly typed view model.
         /// </summary>
         public ObservableDictionary DefaultViewModel { get; } = new ObservableDictionary();
+
+        public IFullDescriptionViewModel FullDescriptionViewModel { get; set; }
 
         /// <summary>
         ///     Populates the page with content passed during navigation.  Any saved state is also
@@ -63,6 +72,49 @@ namespace MysShowsClient.Views
         {
         }
 
+        private async void FullDescriptionPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _statusBar = StatusBar.GetForCurrentView();
+            FullDescriptionViewModel = DataContext as IFullDescriptionViewModel;
+            FullDescriptionViewModel.VisualStateChanged += FullDescriptionViewModel_VisualStateChanged;
+            FullDescriptionViewModel?.LoadShowDescriptionAsync(_requestedShowId);
+        }
+
+        private async void FullDescriptionViewModel_VisualStateChanged(object sender, ChangeVisualStateEventArgs e)
+        {
+            switch (e.LoadingStatesEnum)
+            {
+                case LoadingStatesEnum.None:
+                    break;
+                case LoadingStatesEnum.LoadingState:
+                {
+                    await _statusBar.ProgressIndicator.ShowAsync();
+                    break;
+                }
+                case LoadingStatesEnum.LoadedState:
+                    {
+                        await _statusBar.ProgressIndicator.HideAsync();
+                        break;
+                    }
+                case LoadingStatesEnum.ErrorState:
+                    {
+                        _statusBar.ProgressIndicator.Text = FullDescriptionViewModel.InfoMessage;
+                        _statusBar.ProgressIndicator.ProgressValue = null;
+                        await _statusBar.ProgressIndicator.ShowAsync();
+                        break;
+                    }
+                case LoadingStatesEnum.NotFoundState:
+                    {
+                        _statusBar.ProgressIndicator.Text = FullDescriptionViewModel.InfoMessage;
+                        _statusBar.ProgressIndicator.ProgressValue = null;
+                        await _statusBar.ProgressIndicator.ShowAsync();
+                        break;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         #region NavigationHelper registration
 
         /// <summary>
@@ -82,11 +134,13 @@ namespace MysShowsClient.Views
         /// </param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            _requestedShowId = Convert.ToInt32(e.Parameter);
             NavigationHelper.OnNavigatedTo(e);
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        protected async override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            await _statusBar.HideAsync();
             NavigationHelper.OnNavigatedFrom(e);
         }
 

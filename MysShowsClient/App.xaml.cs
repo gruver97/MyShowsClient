@@ -55,7 +55,7 @@ namespace MysShowsClient
                 rootFrame = new Frame();
 
                 // TODO: change this value to a cache size that is appropriate for your application
-                rootFrame.CacheSize = 1;
+                rootFrame.CacheSize = 2;
 
                 // Set the default language
                 rootFrame.Language = ApplicationLanguages.Languages[0];
