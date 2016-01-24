@@ -86,6 +86,7 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="EventArguments\ChangeVisualStateEventArgs.cs" />
     <Compile Include="Model\Episode.cs" />
     <Compile Include="Model\Parser\IParser.cs" />
     <Compile Include="Model\Parser\Parser.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Services\MyShow\IMyShowService.cs" />
     <Compile Include="Services\MyShow\MyShowService.cs" />
     <Compile Include="ViewModel\ISearchViewModel.cs" />
+    <Compile Include="ViewModel\LoadingStatesEnum.cs" />
     <Compile Include="ViewModel\SearchViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\SearchPage.xaml.cs">
@@ -166,6 +168,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>

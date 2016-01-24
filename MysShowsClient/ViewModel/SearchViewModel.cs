@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
+using MysShowsClient.EventArguments;
 using MysShowsClient.Model;
 using MysShowsClient.Services.MyShow;
 
@@ -36,11 +37,13 @@ namespace MysShowsClient.ViewModel
 
         public ObservableCollection<ShortDescription> ShortDescriptions { get; }
         public DelegateCommand SearchCommand { get; }
+        public event EventHandler<ChangeVisualStateEventArgs> VisualStateChanged;
 
         private async Task SearchShowAsync(string searchQuery)
         {
             try
             {
+                OnVisualStateChanged(new ChangeVisualStateEventArgs(LoadingStatesEnum.LoadingState));
                 var result = await _myShowService.SearchShowsAsync(searchQuery);
                 if (result != null && result.Item2 == null)
                 {
@@ -51,11 +54,17 @@ namespace MysShowsClient.ViewModel
                         ShortDescriptions.Add(shortDescription);
                     }
                 }
+                OnVisualStateChanged(new ChangeVisualStateEventArgs(LoadingStatesEnum.LoadedState));
             }
             catch (Exception)
             {
-                throw;
+                OnVisualStateChanged(new ChangeVisualStateEventArgs(LoadingStatesEnum.ErrorState));
             }
+        }
+
+        protected virtual void OnVisualStateChanged(ChangeVisualStateEventArgs e)
+        {
+            VisualStateChanged?.Invoke(this, e);
         }
     }
 }
