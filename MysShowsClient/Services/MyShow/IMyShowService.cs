@@ -8,6 +8,6 @@ namespace MysShowsClient.Services.MyShow
     public interface IMyShowService
     {
         Task<Tuple<IEnumerable<ShortDescription>, ErrorData>> SearchShowsAsync(string searchQuery);
-        Task<ExtendedDescription> GetShowDescriptionAsync(int showId);
+        Task<Tuple<ExtendedDescription, ErrorData>> GetShowDescriptionAsync(int showId);
     }
 }

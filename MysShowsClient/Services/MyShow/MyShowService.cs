@@ -15,7 +15,7 @@ namespace MysShowsClient.Services.MyShow
     {
         private const string MyShowsApiBaseAddress = "http://api.myshows.ru";
         private const string SearchPart = "/shows/search/?q={0}";
-        private const string Part = "/shows/{0}";
+        private const string InfoEpisodesPart = "/shows/{0}";
         private readonly HttpClient _httpClient;
         private readonly IParser _parser;
 
@@ -55,7 +55,7 @@ namespace MysShowsClient.Services.MyShow
                     return new Tuple<IEnumerable<ShortDescription>, ErrorData>(null, errorData);
                 }
                 var jsonString = await response.Content.ReadAsStringAsync();
-                var parsedResponse = await _parser.DeserializeObjectAsync(jsonString).ConfigureAwait(false);
+                var parsedResponse = await _parser.DeserializeShortDescriptionAsync(jsonString).ConfigureAwait(false);
                 //вместо 404 сервер возвращает пустой массив - он будет считаться за ответ 404!
                 if (parsedResponse != null)
                 {
@@ -74,9 +74,44 @@ namespace MysShowsClient.Services.MyShow
             }
         }
 
-        public async Task<ExtendedDescription> GetShowDescriptionAsync(int showId)
+        public async Task<Tuple<ExtendedDescription, ErrorData>> GetShowDescriptionAsync(int showId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var baseUri = new Uri(MyShowsApiBaseAddress);
+                var address = new Uri(baseUri, string.Format(InfoEpisodesPart, showId));
+                var response = await _httpClient.GetAsync(address);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ErrorData errorData = null;
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.NotFound:
+                            errorData = new ErrorData(response.StatusCode, true);
+                            break;
+                        case HttpStatusCode.InternalServerError:
+                            errorData = new ErrorData(response.StatusCode, true);
+                            break;
+                        default:
+                            errorData = new ErrorData(response.StatusCode, false);
+                            break;
+                    }
+                    return new Tuple<ExtendedDescription, ErrorData>(null, errorData);
+                }
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var parsedResponse = await _parser.DeserializeExtendedDescriptionAsync(jsonString).ConfigureAwait(false);
+                if (parsedResponse != null)
+                {
+                    return new Tuple<ExtendedDescription, ErrorData>(parsedResponse,
+                        new ErrorData(HttpStatusCode.NotFound, true));
+                }
+                return new Tuple<ExtendedDescription, ErrorData>(parsedResponse, null);
+            }
+            catch (ArgumentException)
+            {
+                return new Tuple<ExtendedDescription, ErrorData>(null,
+                    new ErrorData(HttpStatusCode.None, false));
+            }
         }
     }
 }

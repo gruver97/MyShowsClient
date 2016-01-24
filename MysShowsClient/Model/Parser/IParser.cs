@@ -5,6 +5,7 @@ namespace MysShowsClient.Model.Parser
 {
     public interface IParser
     {
-        Task<IEnumerable<ShortDescription>> DeserializeObjectAsync(string jsonString);
+        Task<IEnumerable<ShortDescription>> DeserializeShortDescriptionAsync(string jsonString);
+        Task<ExtendedDescription> DeserializeExtendedDescriptionAsync(string jsonString);
     }
 }
