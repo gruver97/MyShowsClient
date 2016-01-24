@@ -52,7 +52,7 @@ namespace MysShowsClient.Services.MyShow
                     }
                     return new Tuple<IEnumerable<ShortDescription>, ErrorData>(null, errorData);
                 }
-                var parsedResponse = await _parser.DeserializeObjectAsync(await response.Content.ReadAsStringAsync());
+                var parsedResponse = await _parser.DeserializeObjectAsync(await response.Content.ReadAsStringAsync()).ConfigureAwait(false);
                 return new Tuple<IEnumerable<ShortDescription>, ErrorData>(parsedResponse, null);
             }
             catch (ArgumentException)

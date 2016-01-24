@@ -22,7 +22,7 @@ namespace MysShowsClient.Model.Parser
                         (from property in jObject.Properties()
                             from child in property.Children()
                             select child.ToObject<ShortDescription>()).ToList();
-                });
+                }).ConfigureAwait(false);
                 return result;
             }
             catch (JsonException)
