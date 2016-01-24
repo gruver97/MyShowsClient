@@ -47,6 +47,7 @@ namespace MysShowsClient.ViewModel
                     ShortDescriptions.Clear();
                     foreach (var shortDescription in result.Item1)
                     {
+                        if (string.IsNullOrWhiteSpace(shortDescription.Image)) shortDescription.Image = "ms-appx:///Assets/no_image.png";
                         ShortDescriptions.Add(shortDescription);
                     }
                 }

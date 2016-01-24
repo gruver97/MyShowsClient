@@ -36,24 +36,32 @@
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding Path=SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Header="Название сериала" Margin="0,10,10,10" PlaceholderText="Adventure time" />
+                <TextBox Text="{Binding Path=SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Column="0" Header="Название сериала" Margin="0,10,10,10" PlaceholderText="Adventure time" />
                 <Button Grid.Column="1" Command="{Binding Path=SearchCommand}" VerticalAlignment="Bottom">
-                    <SymbolIcon Symbol="Find"></SymbolIcon>
+                    <SymbolIcon Symbol="Find" />
                 </Button>
             </Grid>
-            <ListView Grid.Row="1" ItemsSource="{Binding Path=ShortDescriptions}" IsItemClickEnabled="True" IsSwipeEnabled="False" SelectionMode="None">
+            <ListView Grid.Row="1" ItemsSource="{Binding Path=ShortDescriptions}" IsItemClickEnabled="True"
+                      IsSwipeEnabled="False" SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid Margin="0,0,0,40" Background="#AA000000" MaxHeight="300">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*" MaxHeight="200"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Image Grid.Row="0" Source="{Binding Path=Image}" Stretch="UniformToFill"></Image>
-                            <TextBlock Grid.Row="1" Text="{Binding Path=Title}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                            <Image Grid.Row="0" Source="{Binding Path=Image}" Stretch="Uniform"/>
+                            <TextBlock Style="{StaticResource ListViewItemTextBlockStyle}" Grid.Row="1" Text="{Binding Path=Title}" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWholeWords" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
