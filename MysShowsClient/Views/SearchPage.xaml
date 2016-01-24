@@ -74,6 +74,11 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="ItemClick">
+                        <core:InvokeCommandAction Command="{Binding Path=NavigateToDetailsPageCommand}"></core:InvokeCommandAction>
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
             </ListView>
         </Grid>
         <VisualStateManager.VisualStateGroups>

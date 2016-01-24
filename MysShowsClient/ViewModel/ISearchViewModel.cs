@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.Prism.Commands;
 using MysShowsClient.EventArguments;
@@ -14,5 +15,6 @@ namespace MysShowsClient.ViewModel
         DelegateCommand SearchCommand { get; }
         event EventHandler<ChangeVisualStateEventArgs> VisualStateChanged;
         string InfoMessage { get; }
+        DelegateCommand<ItemClickEventArgs> NavigateToDetailsPageCommand { get; }
     }
 }

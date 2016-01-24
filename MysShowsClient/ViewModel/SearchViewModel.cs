@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using MysShowsClient.EventArguments;
@@ -15,15 +17,23 @@ namespace MysShowsClient.ViewModel
         private const string NotFoundMessage = "Мы не смогли найти по запросу \"{0}\"";
         private const string ErrorMessage = "Упс, проблемка :-( ";
         private readonly IMyShowService _myShowService;
+        private readonly NavigationService _navigationService;
         private string _infoMessage;
         private string _searchQuery;
 
-        public SearchViewModel([Dependency] IMyShowService myShowService)
+        public SearchViewModel([Dependency] IMyShowService myShowService, [Dependency] NavigationService navigationService)
         {
             _myShowService = myShowService;
+            _navigationService = navigationService;
             ShortDescriptions = new ObservableCollection<ShortDescription>();
             SearchCommand = DelegateCommand.FromAsyncHandler(() => SearchShowAsync(SearchQuery),
                 () => !string.IsNullOrWhiteSpace(SearchQuery));
+            NavigateToDetailsPageCommand =
+                new DelegateCommand<ItemClickEventArgs>(
+                    eventArgs =>
+                    {
+                        _navigationService.NavigateTo("FullDescriptionPage", eventArgs.ClickedItem as ShortDescription);
+                    });
         }
 
         public string SearchQuery
@@ -52,6 +62,8 @@ namespace MysShowsClient.ViewModel
                 RaisePropertyChanged();
             }
         }
+
+        public DelegateCommand<ItemClickEventArgs> NavigateToDetailsPageCommand { get; }
 
         private async Task SearchShowAsync(string searchQuery)
         {
@@ -86,7 +98,6 @@ namespace MysShowsClient.ViewModel
             }
             catch (Exception)
             {
-
                 InfoMessage = ErrorMessage;
                 OnVisualStateChanged(new ChangeVisualStateEventArgs(LoadingStatesEnum.ErrorState));
             }

@@ -97,10 +97,15 @@
     <Compile Include="Services\MyShow\ErrorData.cs" />
     <Compile Include="Services\MyShow\IMyShowService.cs" />
     <Compile Include="Services\MyShow\MyShowService.cs" />
+    <Compile Include="ViewModel\FullDescriptionViewModel.cs" />
+    <Compile Include="ViewModel\IFullDescriptionViewModel.cs" />
     <Compile Include="ViewModel\ISearchViewModel.cs" />
     <Compile Include="ViewModel\LoadingStatesEnum.cs" />
     <Compile Include="ViewModel\SearchViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="Views\FullDescriptionPage.xaml.cs">
+      <DependentUpon>FullDescriptionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
@@ -124,6 +129,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\FullDescriptionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SearchPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
