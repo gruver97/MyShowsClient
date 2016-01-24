@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Practices.Prism.Commands;
 using MysShowsClient.Model;
 
 namespace MysShowsClient.ViewModel
@@ -8,6 +9,6 @@ namespace MysShowsClient.ViewModel
     {
         string SearchQuery { get; set; }
         ObservableCollection<ShortDescription> ShortDescriptions { get; }
-        RelayCommand SearchCommand { get; } 
+        DelegateCommand SearchCommand { get; } 
     }
 }

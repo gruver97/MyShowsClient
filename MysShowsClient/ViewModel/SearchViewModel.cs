@@ -1,7 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using Windows.UI.Xaml.Media;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using MysShowsClient.Model;
 using MysShowsClient.Services.MyShow;
@@ -12,6 +13,14 @@ namespace MysShowsClient.ViewModel
     {
         private readonly IMyShowService _myShowService;
         private string _searchQuery;
+
+        public SearchViewModel([Dependency] IMyShowService myShowService)
+        {
+            _myShowService = myShowService;
+            ShortDescriptions = new ObservableCollection<ShortDescription>();
+            SearchCommand = DelegateCommand.FromAsyncHandler(() => SearchShowAsync(SearchQuery),
+                () => !string.IsNullOrWhiteSpace(SearchQuery));
+        }
 
         public string SearchQuery
         {
@@ -26,13 +35,26 @@ namespace MysShowsClient.ViewModel
         }
 
         public ObservableCollection<ShortDescription> ShortDescriptions { get; }
-        public RelayCommand SearchCommand { get; }
+        public DelegateCommand SearchCommand { get; }
 
-        public SearchViewModel([Dependency] IMyShowService myShowService)
+        private async Task SearchShowAsync(string searchQuery)
         {
-            _myShowService = myShowService;
-            ShortDescriptions = new ObservableCollection<ShortDescription>();
-            SearchCommand = new RelayCommand(() => { }, ()=>!string.IsNullOrWhiteSpace(SearchQuery));
+            try
+            {
+                var result = await _myShowService.SearchShowsAsync(searchQuery);
+                if (result != null && result.Item2 == null)
+                {
+                    ShortDescriptions.Clear();
+                    foreach (var shortDescription in result.Item1)
+                    {
+                        ShortDescriptions.Add(shortDescription);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
