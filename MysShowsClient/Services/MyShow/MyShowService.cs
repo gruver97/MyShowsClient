@@ -100,12 +100,7 @@ namespace MysShowsClient.Services.MyShow
                 }
                 var jsonString = await response.Content.ReadAsStringAsync();
                 var parsedResponse = await _parser.DeserializeExtendedDescriptionAsync(jsonString).ConfigureAwait(false);
-                if (parsedResponse != null)
-                {
-                    return new Tuple<ExtendedDescription, ErrorData>(parsedResponse,
-                        new ErrorData(HttpStatusCode.NotFound, true));
-                }
-                return new Tuple<ExtendedDescription, ErrorData>(parsedResponse, null);
+                return new Tuple<ExtendedDescription, ErrorData>(parsedResponse,null);
             }
             catch (ArgumentException)
             {
