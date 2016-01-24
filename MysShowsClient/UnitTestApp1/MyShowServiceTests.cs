@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Web.Http;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using MysShowsClient.Model.Parser;
 using MysShowsClient.Services.MyShow;
 
 namespace UnitTestApp1
@@ -13,7 +14,7 @@ namespace UnitTestApp1
         [TestMethod]
         public async Task TestGeneralSearchAsync()
         {
-            var service = new MyShowService();
+            var service = new MyShowService(new Parser());
             var result = await service.SearchShowsAsync("theory");
             Assert.IsNotNull(result.Item1);
             Assert.IsNull(result.Item2);
@@ -22,7 +23,7 @@ namespace UnitTestApp1
         [TestMethod]
         public async Task TestEmptySearch()
         {
-            var service = new MyShowService();
+            var service = new MyShowService(new Parser());
             try
             {
                 await service.SearchShowsAsync(null);
@@ -44,7 +45,7 @@ namespace UnitTestApp1
         [TestMethod]
         public async Task NotFoundTestAsync()
         {
-            var service = new MyShowService();
+            var service = new MyShowService(new Parser());
             //сервер возращает пустой массив вместо 404, поэтому считаю, что пустой массив равен ответу 404
             var searchResult = await service.SearchShowsAsync("adsfjas;dfjaskfjasdjfaksjfasjf");
             Assert.AreEqual(searchResult.Item1.Count(),0);

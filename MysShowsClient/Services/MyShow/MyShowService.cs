@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 using Windows.Web.Http.Headers;
+using Microsoft.Practices.Unity;
 using MysShowsClient.Model;
 using MysShowsClient.Model.Parser;
 
@@ -16,11 +17,11 @@ namespace MysShowsClient.Services.MyShow
         private const string SearchPart = "/shows/search/?q={0}";
         private const string Part = "/shows/{0}";
         private readonly HttpClient _httpClient;
-        //TODO: заменить на инъекцию
-        private readonly IParser _parser = new Parser();
+        private readonly IParser _parser;
 
-        public MyShowService()
+        public MyShowService([Dependency] IParser parser)
         {
+            _parser = parser;
             var protocolFilter = new HttpBaseProtocolFilter {AutomaticDecompression = true};
             _httpClient = new HttpClient(protocolFilter);
             _httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue("application/json"));

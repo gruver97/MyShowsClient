@@ -13,6 +13,8 @@
 */
 
 using Microsoft.Practices.Unity;
+using MysShowsClient.Model.Parser;
+using MysShowsClient.Services.MyShow;
 
 namespace MysShowsClient.ViewModel
 {
@@ -23,5 +25,14 @@ namespace MysShowsClient.ViewModel
     public class ViewModelLocator
     {
         private IUnityContainer _unityContainer = new UnityContainer();
+
+        public ViewModelLocator()
+        {
+            _unityContainer.RegisterType<IParser, Parser>()
+                .RegisterType<IMyShowService, MyShowService>()
+                .RegisterType<ISearchViewModel, SearchViewModel>();
+        }
+
+        public ISearchViewModel SearchViewModel => _unityContainer.Resolve<ISearchViewModel>();
     }
 }
