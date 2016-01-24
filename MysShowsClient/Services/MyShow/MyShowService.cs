@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
@@ -52,7 +53,17 @@ namespace MysShowsClient.Services.MyShow
                     }
                     return new Tuple<IEnumerable<ShortDescription>, ErrorData>(null, errorData);
                 }
-                var parsedResponse = await _parser.DeserializeObjectAsync(await response.Content.ReadAsStringAsync()).ConfigureAwait(false);
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var parsedResponse = await _parser.DeserializeObjectAsync(jsonString).ConfigureAwait(false);
+                //вместо 404 сервер возвращает пустой массив - он будет считаться за ответ 404!
+                if (parsedResponse != null)
+                {
+                    if (!parsedResponse.Any())
+                    {
+                        return new Tuple<IEnumerable<ShortDescription>, ErrorData>(parsedResponse,
+                            new ErrorData(HttpStatusCode.NotFound, true));
+                    }
+                }
                 return new Tuple<IEnumerable<ShortDescription>, ErrorData>(parsedResponse, null);
             }
             catch (ArgumentException)
