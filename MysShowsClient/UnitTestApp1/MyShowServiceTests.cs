@@ -16,6 +16,7 @@ namespace UnitTestApp1
         {
             var service = new MyShowService();
             var result = await service.SearchShowsAsync("theory");
+            Assert.IsNotNull(result.Item1);
             Assert.IsNull(result.Item2);
         }
     }

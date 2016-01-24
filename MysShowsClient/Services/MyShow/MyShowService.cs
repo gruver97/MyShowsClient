@@ -16,7 +16,8 @@ namespace MysShowsClient.Services.MyShow
         private const string Part = "/shows/{0}";
         private readonly HttpClient _httpClient;
         //TODO: заменить на инъекцию
-        private IParser _parser = new Parser();
+        private readonly IParser _parser = new Parser();
+
         public MyShowService()
         {
             var protocolFilter = new HttpBaseProtocolFilter {AutomaticDecompression = true};
@@ -25,7 +26,7 @@ namespace MysShowsClient.Services.MyShow
             _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new HttpContentCodingWithQualityHeaderValue("utf-8"));
         }
 
-        public async Task<Tuple<List<ShortDescription>, ErrorData>> SearchShowsAsync(string searchQuery)
+        public async Task<Tuple<IEnumerable<ShortDescription>, ErrorData>> SearchShowsAsync(string searchQuery)
         {
             if (string.IsNullOrWhiteSpace(searchQuery))
                 throw new ArgumentException("Argument is null or whitespace", nameof(searchQuery));
@@ -49,14 +50,15 @@ namespace MysShowsClient.Services.MyShow
                             errorData = new ErrorData(response.StatusCode, false);
                             break;
                     }
-                    return new Tuple<List<ShortDescription>, ErrorData>(null, errorData);
+                    return new Tuple<IEnumerable<ShortDescription>, ErrorData>(null, errorData);
                 }
                 var parsedResponse = await _parser.DeserializeObjectAsync(await response.Content.ReadAsStringAsync());
-                return new Tuple<List<ShortDescription>, ErrorData>(null, null);
+                return new Tuple<IEnumerable<ShortDescription>, ErrorData>(parsedResponse, null);
             }
-            catch (Exception e)
+            catch (ArgumentException)
             {
-                return new Tuple<List<ShortDescription>, ErrorData>(null, null);
+                return new Tuple<IEnumerable<ShortDescription>, ErrorData>(null,
+                    new ErrorData(HttpStatusCode.None, false));
             }
         }
 
