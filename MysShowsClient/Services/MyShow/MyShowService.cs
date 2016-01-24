@@ -1,15 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.Web.Http;
+using Windows.Web.Http.Filters;
+using Windows.Web.Http.Headers;
 using MysShowsClient.Model;
 
 namespace MysShowsClient.Services.MyShow
 {
     public class MyShowService : IMyShowService
     {
-        public async Task<List<Description>> SearchShowsAsync(string searchQuery)
+        private const string MyShowsApiBaseAddress = "http://api.myshows.ru";
+        private const string SearchPart = "/shows/search/?q={0}";
+        private const string Part = "/shows/{0}";
+        private readonly HttpClient _httpClient;
+
+        public MyShowService()
         {
-            throw new NotImplementedException();
+            var protocolFilter = new HttpBaseProtocolFilter {AutomaticDecompression = true};
+            _httpClient = new HttpClient(protocolFilter);
+            _httpClient.DefaultRequestHeaders.Accept.Add(new HttpMediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new HttpContentCodingWithQualityHeaderValue("utf-8"));
+        }
+
+        public async Task<Tuple<List<ShortDescription>, ErrorData>> SearchShowsAsync(string searchQuery)
+        {
+            if (string.IsNullOrWhiteSpace(searchQuery))
+                throw new ArgumentException("Argument is null or whitespace", nameof(searchQuery));
+            try
+            {
+                var baseUri = new Uri(MyShowsApiBaseAddress);
+                var address = new Uri(baseUri, string.Format(SearchPart, searchQuery));
+                var response = await _httpClient.GetAsync(address);
+                if (!response.IsSuccessStatusCode)
+                {
+                    ErrorData errorData = null;
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.NotFound:
+                            errorData = new ErrorData(response.StatusCode, true);
+                            break;
+                        case HttpStatusCode.InternalServerError:
+                            errorData = new ErrorData(response.StatusCode, true);
+                            break;
+                        default:
+                            errorData = new ErrorData(response.StatusCode, false);
+                            break;
+                    }
+                    return new Tuple<List<ShortDescription>, ErrorData>(null, errorData);
+                }
+                return new Tuple<List<ShortDescription>, ErrorData>(null, null);
+            }
+            catch (Exception e)
+            {
+                return new Tuple<List<ShortDescription>, ErrorData>(null, null);
+            }
         }
 
         public async Task<ExtendedDescription> GetShowDescriptionAsync(int showId)

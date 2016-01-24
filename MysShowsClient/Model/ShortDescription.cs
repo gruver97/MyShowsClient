@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MysShowsClient.Model
 {
-    public class Description
+    public class ShortDescription
     {
         [JsonProperty("id")]
         public int Id { get; set; }
