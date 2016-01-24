@@ -61,5 +61,15 @@ namespace UnitTestApp1
             Assert.IsNotNull(result.Item1);
             Assert.IsNull(result.Item2);
         }
+
+        [TestMethod]
+        public async Task TestNotFoundEpisodesAsync()
+        {
+            var service = new MyShowService(new Parser());
+            var result = await service.GetShowDescriptionAsync(-1);
+            Assert.IsNull(result.Item1);
+            Assert.IsTrue(result.Item2.IsSearchError);
+            Assert.AreEqual(result.Item2.StatusCode, HttpStatusCode.NotFound);
+        }
     }
 }
