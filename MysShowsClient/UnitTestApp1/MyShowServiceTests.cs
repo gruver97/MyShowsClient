@@ -15,7 +15,7 @@ namespace UnitTestApp1
         public async Task TestSearch()
         {
             var service = new MyShowService();
-            var result = await service.SearchShowsAsync("gri");
+            var result = await service.SearchShowsAsync("theory");
             Assert.IsNull(result.Item2);
         }
     }

@@ -5,6 +5,7 @@ using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 using Windows.Web.Http.Headers;
 using MysShowsClient.Model;
+using MysShowsClient.Model.Parser;
 
 namespace MysShowsClient.Services.MyShow
 {
@@ -14,7 +15,8 @@ namespace MysShowsClient.Services.MyShow
         private const string SearchPart = "/shows/search/?q={0}";
         private const string Part = "/shows/{0}";
         private readonly HttpClient _httpClient;
-
+        //TODO: заменить на инъекцию
+        private IParser _parser = new Parser();
         public MyShowService()
         {
             var protocolFilter = new HttpBaseProtocolFilter {AutomaticDecompression = true};
@@ -49,6 +51,7 @@ namespace MysShowsClient.Services.MyShow
                     }
                     return new Tuple<List<ShortDescription>, ErrorData>(null, errorData);
                 }
+                var parsedResponse = await _parser.DeserializeObjectAsync(await response.Content.ReadAsStringAsync());
                 return new Tuple<List<ShortDescription>, ErrorData>(null, null);
             }
             catch (Exception e)

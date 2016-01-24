@@ -86,6 +86,8 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Episode.cs" />
+    <Compile Include="Model\Parser\IParser.cs" />
+    <Compile Include="Model\Parser\Parser.cs" />
     <Compile Include="Model\ShortDescription.cs" />
     <Compile Include="Model\ExtendedDescription.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
