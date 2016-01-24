@@ -13,5 +13,6 @@ namespace MysShowsClient.ViewModel
         ObservableCollection<ShortDescription> ShortDescriptions { get; }
         DelegateCommand SearchCommand { get; }
         event EventHandler<ChangeVisualStateEventArgs> VisualStateChanged;
+        string InfoMessage { get; }
     }
 }

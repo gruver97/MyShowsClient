@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using MysShowsClient.Annotations;
 using MysShowsClient.Common;
 using MysShowsClient.ViewModel;
 
@@ -107,5 +110,6 @@ namespace MysShowsClient.Views
             var stateName = e.LoadingStatesEnum.ToString();
             VisualStateManager.GoToState(this, stateName, false);
         }
+        
     }
 }

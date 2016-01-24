@@ -49,6 +49,9 @@
             </Grid>
             <ProgressRing Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="ProgressRing"
                           IsActive="True" Visibility="Collapsed" />
+            <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
+                       x:Name="InfoTextBlock" Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Center"
+                       TextWrapping="WrapWholeWords" Text="{Binding Path=InfoMessage}" />
             <ListView Grid.Row="1" x:Name="DescriptionsListView" ItemsSource="{Binding Path=ShortDescriptions}"
                       IsItemClickEnabled="True"
                       IsSwipeEnabled="False" SelectionMode="None">
@@ -78,11 +81,15 @@
                 <VisualState x:Name="LoadingState">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProgressRing"
-                                                           Storyboard.TargetProperty="Visibility">
+                                                       Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DescriptionsListView"
-                                                           Storyboard.TargetProperty="Visibility">
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="InfoTextBlock"
+                                                       Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
@@ -90,12 +97,52 @@
                 <VisualState x:Name="LoadedState">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProgressRing"
-                                                           Storyboard.TargetProperty="Visibility">
+                                                       Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DescriptionsListView"
-                                                           Storyboard.TargetProperty="Visibility">
+                                                       Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="InfoTextBlock"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="NotFoundState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProgressRing"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DescriptionsListView"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="InfoTextBlock"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="ErrorState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProgressRing"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DescriptionsListView"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="InfoTextBlock"
+                                                       Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="InfoTextBlock"
+                                                       Storyboard.TargetProperty="Foreground">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Red" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
