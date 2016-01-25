@@ -38,11 +38,12 @@ namespace MysShowsClient.ViewModel
                 var fullDescription = await _showService.GetShowDescriptionAsync(showId);
                 if (fullDescription.Item1 != null && fullDescription.Item2 == null)
                 {
-                    foreach (var episode in fullDescription.Item1.Episodes.Where(episode => episode.Image == null))
+                    foreach (var episode in fullDescription.Item1.Episodes.Where(episode => string.IsNullOrWhiteSpace(episode.Image)))
                     {
                         episode.Image = "ms-appx:///Assets/no_image.png";
                     }
                     Description = fullDescription.Item1;
+                    OnVisualStateChanged(new ChangeVisualStateEventArgs(LoadingStatesEnum.LoadedState));
                 }
                 if (fullDescription.Item2 != null)
                 {

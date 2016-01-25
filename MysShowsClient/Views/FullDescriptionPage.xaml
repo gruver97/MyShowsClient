@@ -10,18 +10,25 @@
     mc:Ignorable="d"
     Loaded="FullDescriptionPage_OnLoaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding Source={StaticResource Locator}, Path=FullDescriptionViewModel}"
-    >
+    DataContext="{Binding Source={StaticResource Locator}, Path=FullDescriptionViewModel}">
     <Page.Resources>
         <DataTemplate x:Key="DescriptionTemplate">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="{Binding Path=Description.Title}" />
-                <ProgressRing HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="ProgressRing"
-                              IsActive="True" Visibility="Collapsed" />
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
-                           x:Name="InfoTextBlock" Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Center"
-                           TextWrapping="WrapWholeWords" Text="{Binding Path=InfoMessage}" />
-            </StackPanel>
+            <ScrollViewer HorizontalScrollMode="Disabled">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="{Binding Path=Description.Title}"
+                               Style="{StaticResource TitleTextBlockStyle}" TextWrapping="WrapWholeWords" />
+                    <TextBlock Grid.Row="1" Text="{Binding Path=Description.Description}"
+                               Margin="0,10,0,10"
+                               Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" />
+                    <TextBlock Grid.Row="2" Text="{Binding Path=Description.Country}"
+                               Style="{StaticResource BaseTextBlockStyle}" />
+                </Grid>
+                </ScrollViewer>
         </DataTemplate>
         <DataTemplate x:Key="EpisodesTempate">
             <ListView x:Name="EpisodesListView" ItemsSource="{Binding Path=Description.Episodes}"
@@ -39,11 +46,23 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Image Grid.Column="0" Width="100" Height="100" Source="{Binding Path=Image}"
-                                   Stretch="Uniform" />
-                            <TextBlock Style="{StaticResource ListViewItemTextBlockStyle}" Grid.Column="1"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Width="100" Height="100" Source="{Binding Path=Image}"
+                                   Stretch="UniformToFill" />
+                            <TextBlock Grid.Row="0" Style="{StaticResource ListViewItemTextBlockStyle}" Grid.Column="1"
                                        Text="{Binding Path=Title}" HorizontalAlignment="Center"
                                        VerticalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWholeWords" />
+                             <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center">
+                                    <TextBlock.Inlines>
+                                        <Run Text="Сезон "></Run>
+                                        <Run Text="{Binding SeasonNumber}"></Run>
+                                        <Run Text="Эпизод"></Run>
+                                        <Run Text="{Binding EpisodeNumber}"></Run>
+                                    </TextBlock.Inlines>
+                                </TextBlock>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
